@@ -12,7 +12,7 @@ app.secret_key = os.getenv('SECRET_KEY', 'dev_secret_key')
 # Конфигурация
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(BASE_DIR, 'travelai.db')
-WEATHER_API_KEY = os.getenv('WEATHER_API_KEY', 'e1d47d44ca85e82a2c63559ef9356751')
+WEATHER_API_KEY = os.getenv('WEATHER_API_KEY', 'weather_api_personal_code')
 REST_COUNTRIES_URL = "https://restcountries.com/v3.1/all?fields=name,capital,flags,region,subregion,landlocked,languages,currencies,population,area"
 
 # Функции для работы с базой данных
