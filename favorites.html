@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Избранные страны{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Ваши избранные страны</h2>
+    </div>
+</div>
+
+{% if favorites %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for fav in favorites %}
+    <div class="col">
+        <div class="card h-100">
+            <img src="{{ fav.flag_url }}" class="card-img-top" alt="Флаг {{ fav.country_name }}" style="height: 150px; object-fit: cover;">
+            <div class="card-body">
+                <h5 class="card-title">{{ fav.country_name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ fav.capital }}</h6>
+                
+                <div class="d-flex align-items-center my-2">
+                    <i class="bi bi-thermometer-half fs-4 me-2"></i>
+                    <div>
+                        <strong>{{ fav.weather_temp }}°C</strong><br>
+                        {{ fav.weather_desc }}
+                    </div>
+                </div>
+                
+                <form action="{{ url_for('save_note', favorite_id=fav.id) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="notes{{ fav.id }}" class="form-label">Ваши заметки:</label>
+                        <textarea class="form-control" id="notes{{ fav.id }}" name="note" rows="3">{{ fav.notes or '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">Сохранить</button>
+                </form>
+            </div>
+            <div class="card-footer bg-transparent">
+                <small class="text-muted">Добавлено: {{ fav.timestamp }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    У вас пока нет избранных стран. Начните поиск на <a href="{{ url_for('home') }}">главной странице</a>.
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Найдите идеальное место для путешествия</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('recommend') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Тип путешествия:</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="пляж">Пляжный отдых</option>
+                            <option value="горы">Горный туризм</option>
+                            <option value="город">Городской туризм</option>
+                            <option value="природа">Природа и экотуризм</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="budget" class="form-label">Бюджет (USD):</label>
+                        <input type="range" class="form-range" min="500" max="10000" step="500" id="budget" name="budget" value="1000">
+                        <div class="d-flex justify-content-between">
+                            <span>500$</span>
+                            <span id="budgetValue">1000$</span>
+                            <span>10000$</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="climate" class="form-label">Климат:</label>
+                        <select class="form-select" id="climate" name="climate">
+                            <option value="any">Любой</option>
+                            <option value="warm">Теплый (выше 15°C)</option>
+                            <option value="cold">Холодный (ниже 15°C)</option>
+                            <option value="tropical">Тропический (выше 25°C)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="language" class="form-label">Предпочтительный язык:</label>
+                        <select class="form-select" id="language" name="language">
+                            <option value="any">Любой</option>
+                            <option value="english">Английский</option>
+                            <option value="spanish">Испанский</option>
+                            <option value="french">Французский</option>
+                            <option value="german">Немецкий</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="duration" class="form-label">Длительность поездки:</label>
+                        <select class="form-select" id="duration" name="duration">
+                            <option value="weekend">Выходные (2-3 дня)</option>
+                            <option value="week">Неделя (7 дней)</option>
+                            <option value="month">Месяц (30 дней)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="currency" class="form-label">Валюта для отображения цен:</label>
+                        <select class="form-select" id="currency" name="currency">
+                            <option value="USD">Доллар США (USD)</option>
+                            <option value="EUR">Евро (EUR)</option>
+                            <option value="RUB">Рубль (RUB)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Найти рекомендации
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const budgetSlider = document.getElementById('budget');
+    const budgetValue = document.getElementById('budgetValue');
+    
+    budgetSlider.addEventListener('input', function() {
+        budgetValue.textContent = this.value + '$';
+    });
+</script>
+{% endblock %}

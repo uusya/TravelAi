@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}История поиска{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>История ваших поисков</h2>
+    </div>
+</div>
+
+{% if searches %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Параметры поиска</th>
+                <th>Бюджет</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for search in searches %}
+            <tr>
+                <td>{{ search.timestamp }}</td>
+                <td>
+                    {% set params = search.search_params.split('|') %}
+                    Тип: {{ params[0] }} | Климат: {{ params[2] }}<br>
+                    Язык: {{ params[3] }} | Длительность: {{ params[4] }}
+                </td>
+                <td>{{ search.budget }}$</td>
+                <td>
+                    <a href="{{ url_for('recommend') }}?type={{ params[0] }}&budget={{ search.budget }}&climate={{ params[2] }}&language={{ params[3] }}&duration={{ params[4] }}" 
+                       class="btn btn-sm btn-outline-primary">
+                        Повторить
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    У вас пока нет истории поиска. Начните с <a href="{{ url_for('home') }}">главной страницы</a>.
+</div>
+{% endif %}
+{% endblock %}

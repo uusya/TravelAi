@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Планы поездок{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Мои планы поездок</h2>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPlanModal">
+            <i class="bi bi-plus"></i> Добавить поездку
+        </button>
+    </div>
+</div>
+
+{% if plans %}
+<div class="row">
+    {% for plan in plans %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ plan.country_name }}</h5>
+                <span class="badge bg-{{ 'success' if plan.status == 'completed' else 'warning' if plan.status == 'in_progress' else 'info' }}">
+                    {{ 'Завершено' if plan.status == 'completed' else 'В процессе' if plan.status == 'in_progress' else 'Запланировано' }}
+                </span>
+            </div>
+            <div class="card-body">
+                <p>
+                    <i class="bi bi-calendar-event"></i> 
+                    {{ plan.start_date }} - {{ plan.end_date }}
+                </p>
+                <p>
+                    <i class="bi bi-cash-stack"></i> 
+                    Бюджет: {{ plan.budget }}$
+                </p>
+                <h6>Запланированные активности:</h6>
+                <p>{{ plan.activities or 'Не указано' }}</p>
+            </div>
+            <div class="card-footer bg-transparent d-flex justify-content-between">
+                <a href="{{ url_for('country_detail', country_name=plan.country_name) }}" class="btn btn-sm btn-outline-primary">
+                    Информация о стране
+                </a>
+                <form action="{{ url_for('delete_plan', plan_id=plan.id) }}" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                        Удалить
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    У вас пока нет планов поездок. Добавьте первый план!
+</div>
+{% endif %}
+
+<!-- Модальное окно добавления плана -->
+<div class="modal fade" id="addPlanModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавить новую поездку</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ url_for('add_plan') }}" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="country_name" class="form-label">Страна:</label>
+                        <input type="text" class="form-control" id="country_name" name="country_name" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="start_date" class="form-label">Дата начала:</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="end_date" class="form-label">Дата окончания:</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="budget" class="form-label">Бюджет ($):</label>
+                        <input type="number" class="form-control" id="budget" name="budget" min="100" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="activities" class="form-label">Запланированные активности:</label>
+                        <textarea class="form-control" id="activities" name="activities" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

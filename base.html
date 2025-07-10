@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelAI - {% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --sunset-orange: #FF7E5F;
+            --sunset-pink: #FEB47B;
+            --sunset-yellow: #FFD26F;
+            --sunset-purple: #9B59B6;
+            --sunset-dark: #2C3E50;
+            --sunset-light: #FDF0D5;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--sunset-light), #FFF5E6);
+            color: var(--sunset-dark);
+            padding-top: 70px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, var(--sunset-orange), var(--sunset-pink));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 5px;
+            border-radius: 20px;
+            padding: 5px 15px !important;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-bottom: 25px;
+            border: none;
+            border-radius: 15px !important;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, var(--sunset-pink), var(--sunset-yellow));
+            color: white;
+            font-weight: 600;
+            border-bottom: none;
+        }
+        
+        .weather-icon {
+            width: 60px;
+            height: 60px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+        
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--sunset-yellow), var(--sunset-orange));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sunset-orange), var(--sunset-pink));
+            border: none;
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(255, 126, 95, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--sunset-pink), var(--sunset-orange));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 126, 95, 0.4);
+        }
+        
+        .btn-outline-primary {
+            color: var(--sunset-orange);
+            border-color: var(--sunset-orange);
+            border-radius: 25px;
+        }
+        
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, var(--sunset-orange), var(--sunset-pink));
+            color: white;
+        }
+        
+        footer {
+            background: linear-gradient(90deg, var(--sunset-dark), var(--sunset-purple));
+            color: white;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        
+        .rating input {
+            display: none;
+        }
+        
+        .rating label {
+            color: var(--sunset-yellow);
+            font-size: 1.8rem;
+            cursor: pointer;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .rating input:checked ~ label {
+            color: var(--sunset-orange);
+            transform: scale(1.1);
+        }
+        
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: var(--sunset-pink);
+            transform: scale(1.2);
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card, .alert {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+            .nav-link {
+                padding: 8px 12px !important;
+                margin: 2px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="bi bi-compass"></i> TravelAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == url_for('home') }}" href="{{ url_for('home') }}">
+                            <i class="bi bi-house-door"></i> Главная
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == url_for('history') }}" href="{{ url_for('history') }}">
+                            <i class="bi bi-clock-history"></i> История
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == url_for('favorites') }}" href="{{ url_for('favorites') }}">
+                            <i class="bi bi-heart"></i> Избранное
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == url_for('travel_plans') }}" href="{{ url_for('travel_plans') }}">
+                            <i class="bi bi-calendar-check"></i> Планы
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <div class="text-center p-3">
+            © 2025 TravelAI - Created by Anastasia and Hanna with <i class="bi bi-heart-fill" style="color: var(--sunset-orange);"></i>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Плавная прокрутка для всех ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Анимация карточек при загрузке с задержкой
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
